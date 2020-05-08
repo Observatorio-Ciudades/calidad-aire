@@ -1,6 +1,4 @@
-# Estructura para proyectos
-
-_Estructura flexible para proyectos de ciencia de datos._
+# Calidad del aire
 
 
 ### Para iniciar un nuevo proyecto:
