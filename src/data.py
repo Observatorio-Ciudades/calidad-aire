@@ -48,3 +48,28 @@ for p in contaminante:
         
     sinaica_mediciones = parse_mediciones_json(filename)
     sinaica_mediciones.to_csv(filename+'.csv', index=False)
+
+def est_csv():
+    """Downloads csv with information about Mexican air quality stations
+
+    """
+        
+    parametros_request = client.makeCall('sinaica-estaciones',{'pageSize':200})
+
+    estaciones = []
+    #Obtiene datos de todas las estaciones para despues iterar sobre ellas
+    for v in parametros_request['results']:
+        aux = pd.DataFrame.from_dict(v,orient='index').T
+        estaciones.append(aux)
+
+    estaciones = pd.concat(estaciones, ignore_index=True)
+
+    #Quita las estaciones que esten fuera de Mexico
+    mask = (estaciones.lat.between(14, 34.5)) & (estaciones.long.between(-120, -70))
+    estaciones = estaciones[mask]
+    
+    direccion = 'D:\\Users\\edgar\\Source\\Repos\\Observatorio-Ciudades\\calidad-aire\\data\\raw\\Grl\\'
+
+    filename = direccion+'estaciones'
+
+    estaciones.to_csv (r''+filename+'.csv', index = False, header=True)
