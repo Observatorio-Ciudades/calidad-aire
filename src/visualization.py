@@ -44,3 +44,159 @@ def visualize_stations():
                             tooltip = popup_text, fill=True, fill_opacity=0.4).add_to(folium_map)
 
     return folium_map
+
+
+def graph_yearly(city):
+    """Creates a graph that compares the air quality data for each pollutant from 2017 to 2020
+
+    Args:
+        city (str): code for the city to be analysed, for example: cdmx
+    """
+    
+    city_dict = {'cdmx':'Valle de México'}
+    year_dict = {2017:'green', 2018:'blue',
+                2019:'orange', 2020:'red'}
+    
+    
+    for p in param:
+        
+        data_mean = data_bydateParam = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+p+'.csv').set_index('FECHA')
+        
+        data_mean['mean'] = data_mean.mean(axis=1)
+        
+        data_mean = data_mean.reset_index()
+        
+        data_mean['FECHA'] = pd.to_datetime(data_mean['FECHA'])
+    
+        
+        ax = plt.gca()
+        
+        for y in years:
+            filter_year=data_mean[data_mean['FECHA'].dt.year==y]
+            
+            filter_year['FECHA'] = filter_year['FECHA'].dt.strftime('%m-%d')
+            
+            #print(filter_year)
+            
+            filter_year.plot(kind='scatter', x='FECHA',y='mean', color=year_dict[y], label = str(y), ax=ax)
+            
+            
+        plt.ylabel('Concentration: '+p)
+        
+        plt.savefig(dir_fig+'Year_Compare_'+p+'.png')
+        
+        ax.clear()
+
+def colors(conc_nrm):code for the city to be analysed, for example: cdmx
+    """Receives a normalized concentration value and returns a hex depending on the air quality level.
+
+    Args:
+        conc_nrm (float): result of the division between the averaged concentration and a bad quality concentration.
+
+    Returns:
+        str : hex color
+    """
+    [description]
+    if conc_nrm<=0.25:
+        color = '#3CB371'
+    elif conc_nrm<=0.5:
+        color = '#FFD700'
+    elif conc_nrm<=0.75:
+        color = '#FF7F50'
+    else:
+        color = '#483D8B'
+        
+    return color
+
+def visualize_aqdata_date(city, pollutant, date):
+    """ Creates a folium map with stations arranged by size and colour depending on the concentration of the pollutant.
+
+    Args:
+        city (str): code for the city to be analysed, for example: cdmx
+        pollutant (str): pollutant to be plotted
+        date (str): date to be analysed
+
+    Returns:
+        folium map
+    """
+    
+    city_dict = {'cdmx':'Valle de México'}
+    
+    p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
+               'PM25':97.4, 'SO2':195,'NO2':315}
+    
+    data_bydateParam = pd.read_csv(dir_grl+'processed/'+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    
+    centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
+
+    #Creacion del mapa
+    folium_map = folium.Map(location=[centro_lat,centro_lon], zoom_start=10,
+                            tiles = 'cartodb positron')
+
+    for i, est in city_stations[city_stations['city']==city_dict[city]].iterrows():
+
+        est_code = city_stations.loc[(i),'codigo']
+
+        #Coloca los marcadores en el mapa
+        c_value = data_bydateParam.loc[(date),est_code]
+        c_graph = (data_bydateParam.loc[(date),est_code])/p_limits[pollutant]
+
+        #Puntos con nombre, latitud y longitud
+        popup_text = f"<b> Nombre: </b> {est.nombre} <br> <b> Latitud: </b> {est.lat:.5f} <br> <b> Longitud: </b> {est.long:.5f} <br> <b> Contaminante: </b> {pollutant} <br> <b> Conc: </b> {c_value} <br>"
+
+        #Coloca los marcadores en el mapa
+        folium.CircleMarker(location=[est.lat, est.long], radius=c_graph*50,
+                            tooltip = popup_text, fill=True, color=colors(c_graph),
+                            fill_opacity=0.65).add_to(folium_map)
+
+    return(folium_map)
+
+def clr_change(conc_cmp):
+    """Function
+
+    Args:
+        conc_cmp ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    
+    if conc_cmp>=0:
+        color = '#F84A50'
+    else:
+        color = '#6086CA'
+        
+    return color
+
+def compare_year_prior(city, pollutant, date):
+    
+    city_dict = {'cdmx':'Valle de México'}
+    
+    prev_year = str(int(date[:4])-1)+date[4:]
+    
+    data_bydateParam = pd.read_csv(dir_grl+'processed/'+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    
+    centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
+
+    #Creacion del mapa
+    folium_map = folium.Map(location=[centro_lat,centro_lon], zoom_start=10,
+                            tiles = 'cartodb positron')
+
+    for i, est in city_stations[city_stations['city']==city_dict[city]].iterrows():
+
+        est_code = city_stations.loc[(i),'codigo']
+
+        #Coloca los marcadores en el mapa
+        c_current = data_bydateParam.loc[(date),est_code]
+        c_prev = data_bydateParam.loc[(prev_year),est_code]
+        c_graph = (c_current - c_prev)/c_prev
+
+        #Puntos con nombre, latitud y longitud
+        popup_text = f"<b> Nombre: </b> {est.nombre} <br> <b> Latitud: </b> {est.lat:.5f} <br> <b> Longitud: </b> {est.long:.5f} <br> <b> Contaminante: </b> {pollutant} <br> <b> Conc: </b> {c_graph} <br>"
+
+        #Coloca los marcadores en el mapa
+        folium.CircleMarker(location=[est.lat, est.long], radius=abs(c_graph)*50,
+                            tooltip = popup_text, fill=True, color=clr_change(c_graph),
+                            fill_opacity=0.65).add_to(folium_map)
+
+    return(folium_map)
