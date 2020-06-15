@@ -7,14 +7,44 @@
 
 import folium
 from datosgobmx import client
-import panda as pd
+import pandas as pd
 import matplotlib.pyplot as plt
 
 dir_grl = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/data/processed/'
 dir_fig = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/output/figures/cdmx_yearly/'
 
-param = ['CO','NO2', 'O3','PM10','PM25','SO2']
-years = [2017,2018,2019,2020]
+def pollutant(p):
+    """Function that returns a str with a pollutant.
+
+    Args:
+        p (int): values from 0 to 5 for list place.
+
+    Returns:
+        str: pollutant.
+    """
+    #Parametros de contaminantes
+    param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+    return (param[p])
+
+def compare_aq(p, city):
+
+    dir_pcs = '../data/processed/'
+    dir_pcs_cat = dir_pcs+'aqip_'+city #Directory to save concatenation
+    dir_fig_cmp = '../output/figures/aqip_analysis/'
+
+    compare = pd.read_csv(dir_pcs_cat +city+'_AQIP.csv')
+    compare = compare.drop(columns=['count','min','max','median','variance','PARAM','FECHA']).rename(columns={'Specie':'Contaminante',
+                                                                                                                'Date':'Fecha'})
+    ax = plt.gca()
+    compare[compare['Contaminante']==p].plot(kind='scatter', x='Fecha',y='cdmx_median', color='green', ax=ax)
+    compare[compare['Contaminante']==p].plot(kind='scatter', x='Fecha',y='aqip_median', color='orange', alpha = 0.75, ax=ax)
+    
+    plt.ylabel('Concentration: '+p)
+    
+    plt.savefig(dir_fig_cmp+p+'_x1.png')
+    
+    #plt.show()
+
 
 def visualize_stations():
     
@@ -59,14 +89,15 @@ def graph_yearly(city):
     Args:
         city (str): code for the city to be analysed, for example: cdmx
     """
-    
+    years = [2017, 2018, 2019, 2020] #Years to be referenced
+
     year_dict = {2017:'green', 2018:'blue',
                 2019:'orange', 2020:'red'}
     
     
-    for p in param:
+    for i in range(6):
         
-        data_mean = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+p+'.csv').set_index('FECHA')
+        data_mean = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+pollutant(i)+'.csv').set_index('FECHA')
         
         data_mean['mean'] = data_mean.mean(axis=1)
         
@@ -87,9 +118,9 @@ def graph_yearly(city):
             filter_year.plot(kind='scatter', x='FECHA',y='mean', color=year_dict[y], label = str(y), ax=ax)
             
             
-        plt.ylabel('Concentration: '+p)
+        plt.ylabel('Concentration: '+pollutant(i))
         
-        plt.savefig(dir_fig+'Year_Compare_'+p+'.png')
+        plt.savefig(dir_fig+'Year_Compare_'+pollutant(i)+'.png')
         
         ax.clear()
 
@@ -125,7 +156,8 @@ def visualize_aqdata_date(city, pollutant, date):
     Returns:
         folium map
     """
-    
+    city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
+
     city_dict = {'cdmx':'Valle de México'}
     
     p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
@@ -185,7 +217,8 @@ def compare_year_prior(city, pollutant, date):
     Returns:
         folium map where a blue marker indicates a smaller value of the input date concentration and, the bigger the marker the larger the concentration
     """
-    
+    city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
+
     city_dict = {'cdmx':'Valle de México'}
     
     prev_year = str(int(date[:4])-1)+date[4:]

@@ -2,7 +2,7 @@
 # Module: Data gathering and treatment
 # developed by: Edgar Egurrola
 # 			  edgar.egurrola@tec.mx
-# updated: 07/06/2020
+# updated: 15/06/2020
 ################################################################################
 
 from pathlib import Path
@@ -14,30 +14,36 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 
-dir_grl = 'D:\\Users\\edgar\\Source\\Repos\\Observatorio-Ciudades\\calidad-aire\\data\\'
-dir_raw_aqip = dir_grl + 'processed\\aqip\\'
-dir_raw_cdmx = dir_grl + 'processed\\cdmx\\'
-dir_pcs_cat = dir_grl + 'processed\\aqip_cdmx\\'
-dir_raw = dir_grl + 'raw\\'
-dir_raw_grl = dir_raw + 'Grl\\'
 
+def pollutant(p):
+    """Function that returns a str with a pollutant.
 
-#Descarga datos de la ciudad, contaminantes y cantidad de datos establecidos
-ciudad = 'Guadalajara'
-contaminante = ['O3', 'PM10', 'CO']
-num_datos = 10000
+    Args:
+        p (int): values from 0 to 5 for list place.
 
-#Parametros de contaminantes
-param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+    Returns:
+        str: pollutant.
+    """
+    #Parametros de contaminantes
+    param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+    return (param[p])
 
 #Funcion para guardar json con informacion de contaminantes a csv
 def parse_mediciones_json(json_file):
+    """Function that converts json files to csv.
+
+    Args:
+        json_file ([json]): File in json.
+
+    Returns:
+        [csv]: json convedescriptionrted to csv.
+    """
     
     with open (json_file,'r') as aux:
         results = json.load(aux)['results']
         
     pre_data=[]
-    
+
     for r in results:
         
         aux = pd.DataFrame.from_dict(r,orient='index').T
@@ -45,26 +51,35 @@ def parse_mediciones_json(json_file):
     
     if len(pre_data)>0:
         pre_data = pd.concat(pre_data,ignore_index=True)
-        return pre_data
-
-#Checa si existe la carpeta de la ciudad y contaminantes y los crea si no existen
-if not os.path.isdir(direccion+ciudad): 
-    os.mkdir(direccion+ciudad) 
-    for c in param: os.mkdir(dir_raw+ciudad+'\\'+c)
+        return (pre_data)
 
 
-#Itera sobre la lista de contaminantes y obtiene ese parametro para la ciudad establecida
-for p in param:
-    filename = ciudad+'_'+p
-    filename = direccion+ciudad+'\\'+p+'\\'+filename
-    
-    data_api = client.makeCall('sinaica',{'pageSize':num_datos, 'city':ciudad, 'parametro':p})
+def data_gdl(city, num_datos):
+    """Function that downloads csv with from SINAICA for a given city.
+
+    """
+    dir_raw = '../data/raw/'
+
+    city_dict = {'gdl':'Guadalajara'}
+
+    #Checa si existe la carpeta de la ciudad y contaminantes y los crea si no existen
+    if not os.path.isdir(dir_raw+city): 
+        os.mkdir(dir_raw+city) 
+        for i in range(6): os.mkdir(dir_raw+city+'/'+pollutant(i))
+
+
+    #Itera sobre la lista de contaminantes y obtiene ese parametro para la ciudad establecida
+    for i in range(6):
+        filename = city+'_'+pollutant(i)
+        filename = dir_raw+city+'/'+pollutant(i)+'/'+filename
         
-    with open (filename,'w') as outfile:
-        json.dump(data_api,outfile)
-        
-    sinaica_mediciones = parse_mediciones_json(filename)
-    sinaica_mediciones.to_csv(filename+'.csv', index=False)
+        data_api = client.makeCall('sinaica',{'pageSize':num_datos, 'city':city_dict[city], 'parametro':pollutant(i)})
+            
+        with open (filename,'w') as outfile:
+            json.dump(data_api,outfile)
+            
+        sinaica_mediciones = parse_mediciones_json(filename)
+        sinaica_mediciones.to_csv(filename+'.csv', index=False)
 
 def est_csv():
     """Downloads csv with information about Mexican air quality stations using SINAICA api
@@ -72,6 +87,7 @@ def est_csv():
     """
         
     parametros_request = client.makeCall('sinaica-estaciones',{'pageSize':200})
+    dir_raw_grl = '../data/raw/Grl/'
 
     estaciones = []
     #Obtiene datos de todas las estaciones para despues iterar sobre ellas
@@ -90,41 +106,77 @@ def est_csv():
     estaciones.to_csv (r''+filename+'.csv', index = False, header=True)
 
 #Extracts data from cdmx database
-def cdmx_data():
-    """Merges the databases from Mexico City air quality stations into a single csv
+def merge_aq(city):
+    """Merges the databases from a given city air quality stations into a single csv
 
     Returns:
         csv -- csv with all the data from air quality stations
     """
+    dir_raw = '../data/raw/'
+    dir_pcs = '../data/proccessed/'
+
+    years = [2017, 2018, 2019, 2020] #Years to be merged
+    
     all_data = pd.DataFrame()
     for year in years:
-        for p in param:
+        for i in range(6):
             
-            data = pd.read_excel(dir_raw+str(year)[-2:]+'RAMA\\'+str(year)+p+'.xls').replace(-99,np.NaN)
-            data['PARAM']=p
+            data = pd.read_excel(dir_raw+city+str(year)[-2:]+'RAMA\\'+str(year)+pollutant(i)+'.xls').replace(-99,np.NaN)
+            data['PARAM']=pollutant(i)
             data = data.set_index(['PARAM','FECHA','HORA'])
             all_data = all_data.append(data)
     
     filename = dir_pcs + str(years[0])+'-'+str(years[len(years)-1])
     all_data.to_csv (r''+filename+'.csv', index = True, header=True)
 
-def res_cdmx():
-    res_data = pd.read_csv(dir_pcs + str(years[0])+'-'+str(years[len(years)-1])+'.csv', index_col = [0,1])
+def res_aqdata(city):
+    """Groups data from air quality stations by date and parameter for every station.
+
+    Args:
+        city (str): city code to by analyzed.
+    """
+
+    dir_pcs = '../data/proccessed/'
+
+    years = [2017, 2018, 2019, 2020] #Years to be summarized
+
+    res_data = pd.read_csv(dir_pcs +city + str(years[0])+'-'+str(years[len(years)-1])+'.csv', index_col = [0,1])
     res_data = res_data.groupby(['PARAM','FECHA']).mean()
     
     filename = dir_pcs +'res_'+ str(years[0])+'-'+str(years[len(years)-1])
     res_data.to_csv (r''+filename+'.csv', index = True, header=True)
     
     
-def cdmx_daily_mean():
-    cdmx_mean_data = pd.read_csv(dir_pcs +'res_'+ str(years[0])+'-'+str(years[len(years)-1])+'.csv', index_col = [0,1]).median(axis=1)
+def aq_daily_median(city):
+    """Calculates the median by day for a given city and pollutant.
+
+    Args:
+        city (str): city code to calculate median
+
+    Returns:
+        dataframe: returns the dataframe for the date and calculated median.
+    """
+
+    dir_pcs = '../data/proccessed/'
+
+    years = [2017, 2018, 2019, 2020] #Years to be referenced
+
+    aq_median_data = pd.read_csv(dir_pcs +city+'res_'+ str(years[0])+'-'+str(years[len(years)-1])+'.csv', index_col = [0,1]).median(axis=1)
     
-    cdmx_mean_data.to_csv(dir_pcs +'median_res_'+ str(years[0])+'-'+str(years[len(years)-1])+'.csv')
+    aq_median_data.to_csv(dir_pcs+city+'median_res_'+ str(years[0])+'-'+str(years[len(years)-1])+'.csv')
     
-    return (cdmx_mean_data)
+    return (aq_median_data)
 
 
 def o3_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
     conc = 0
     if x <= 50:
         conc = ((x-0)*(0.054-0))/(50-0)+0
@@ -140,6 +192,15 @@ def o3_conc(x):
     return (conc*1000)
 
 def co_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
+
     conc = 0
     if x <= 50:
         conc = ((x-0)*(4.4-0))/(50-0)+0
@@ -159,6 +220,15 @@ def co_conc(x):
     return (conc)
 
 def pm10_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
+
     conc = 0
     if x <= 50:
         conc = ((x-0)*(54-0))/(50-0)+0
@@ -178,6 +248,15 @@ def pm10_conc(x):
     return (conc)
         
 def pm25_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
+
     conc = 0
     if x <= 50:
         conc = ((x-0)*(12-0))/(50-0)+0
@@ -197,6 +276,15 @@ def pm25_conc(x):
     return (conc*1.0)
 
 def so2_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
+
     conc = 0
     if x <= 50:
         conc = ((x-0)*(35-0))/(50-0)+0
@@ -216,6 +304,15 @@ def so2_conc(x):
     return (conc)
 
 def no2_conc(x):
+    """Calculates the concentration of a pollutant based on air quality index.
+
+    Args:
+        x (int): air quality index of the pollutant
+
+    Returns:
+        float: concentration of the pollutant
+    """
+
     conc = 0
     if x <= 50:
         conc = ((x-0)*(53-0))/(50-0)+0
@@ -236,12 +333,17 @@ def no2_conc(x):
     
 #Extracts data from aqip database
 def aqip_data():
+    """Function that extracts data for mexican city from the Air Quality Index Project database.
+
+    """
+    dir_raw_aqip = '../data/raw/AirQualityIndexProject/world_data/'
+    dir_pcs_aqip = '../data/processed/aqip/'
     
     all_data = pd.DataFrame()
     
-    for file in os.listdir(dir_raw):
+    for file in os.listdir(dir_raw_aqip):
 
-        filename = dir_raw + file
+        filename = dir_raw_aqip + file
         
         data_aqip = pd.DataFrame()
         
@@ -255,16 +357,20 @@ def aqip_data():
         
         all_data = all_data.append(data_aqip)
         
-    
+    #Condition that selects pollutant
     cond = [all_data.index == 'O3', all_data.index == 'CO', all_data.index == 'PM10', 
            all_data.index == 'PM25', all_data.index == 'NO2', all_data.index == 'SO2']
     
+    #Choice that dictates what happends for each case
     choice = [all_data['median'].apply(o3_conc), all_data['median'].apply(co_conc), 
              all_data['median'].apply(pm10_conc), all_data['median'].apply(pm25_conc),
              all_data['median'].apply(no2_conc), all_data['median'].apply(so2_conc)]
     
+    #Calculates a new column with the data converted from 
+    #air quality index to concentration by pollutant
+
     all_data['c_median'] = np.select(cond, choice)
     
     all_data = all_data.reset_index().set_index(['City','Specie','Date'])
 
-    all_data.to_csv(dir_pcs +'MX_2015_2020.csv')
+    all_data.to_csv(dir_pcs_aqip +'MX_2015_2020.csv')
