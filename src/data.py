@@ -107,7 +107,7 @@ def cdmx_data():
     
     filename = dir_pcs + str(years[0])+'-'+str(years[len(years)-1])
     all_data.to_csv (r''+filename+'.csv', index = True, header=True)
-
+Merge
 def res_cdmx():
     res_data = pd.read_csv(dir_pcs + str(years[0])+'-'+str(years[len(years)-1])+'.csv', index_col = [0,1])
     res_data = res_data.groupby(['PARAM','FECHA']).mean()
@@ -268,7 +268,3 @@ def aqip_data():
     all_data = all_data.reset_index().set_index(['City','Specie','Date'])
 
     all_data.to_csv(dir_pcs +'MX_2015_2020.csv')
-
-
-
-    

@@ -8,6 +8,13 @@
 import folium
 from datosgobmx import client
 import panda as pd
+import matplotlib.pyplot as plt
+
+dir_grl = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/data/processed/'
+dir_fig = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/output/figures/cdmx_yearly/'
+
+param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+years = [2017,2018,2019,2020]
 
 def visualize_stations():
     
@@ -87,7 +94,7 @@ def graph_yearly(city):
         
         ax.clear()
 
-def colors(conc_nrm):code for the city to be analysed, for example: cdmx
+def colors(conc_nrm):
     """Receives a normalized concentration value and returns a hex depending on the air quality level.
 
     Args:
@@ -152,13 +159,13 @@ def visualize_aqdata_date(city, pollutant, date):
     return(folium_map)
 
 def clr_change(conc_cmp):
-    """Function
+    """Function that receives a float of a normalyzed concentration and returns a hex.
 
     Args:
-        conc_cmp ([type]): [description]
+        conc_cmp (float): value resulted from the division bewteen the concentration of the year analysed and the year prior.
 
     Returns:
-        [type]: [description]
+        str: hex with the code, if the value of the current year is smaller it's blue, otherwise it's red.
     """
     
     if conc_cmp>=0:
@@ -169,6 +176,16 @@ def clr_change(conc_cmp):
     return color
 
 def compare_year_prior(city, pollutant, date):
+    """Creates a map with the analysis of the average between the input date and the previous year for a selected pollutant.
+
+    Args:
+        city (str): code for the city to be analysed, for example: cdmx
+        pollutant (str): pollutant to be plotted
+        date (str): date to be analysed
+
+    Returns:
+        folium map where a blue marker indicates a smaller value of the input date concentration and, the bigger the marker the larger the concentration
+    """
     
     city_dict = {'cdmx':'Valle de México'}
     
