@@ -14,7 +14,6 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 
-#test
 dir_grl = 'D:\\Users\\edgar\\Source\\Repos\\Observatorio-Ciudades\\calidad-aire\\data\\'
 dir_pcs_aqip = dir_grl + 'processed\\aqip\\'
 dir_pcs_cdmx = dir_grl + 'processed\\cdmx\\'

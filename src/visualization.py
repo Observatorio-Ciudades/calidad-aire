@@ -60,14 +60,13 @@ def graph_yearly(city):
         city (str): code for the city to be analysed, for example: cdmx
     """
     
-    city_dict = {'cdmx':'Valle de México'}
     year_dict = {2017:'green', 2018:'blue',
                 2019:'orange', 2020:'red'}
     
     
     for p in param:
         
-        data_mean = data_bydateParam = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+p+'.csv').set_index('FECHA')
+        data_mean = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+p+'.csv').set_index('FECHA')
         
         data_mean['mean'] = data_mean.mean(axis=1)
         
@@ -103,7 +102,7 @@ def colors(conc_nrm):
     Returns:
         str : hex color
     """
-    [description]
+
     if conc_nrm<=0.25:
         color = '#3CB371'
     elif conc_nrm<=0.5:
