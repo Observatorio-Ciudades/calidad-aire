@@ -10,9 +10,6 @@ from datosgobmx import client
 import pandas as pd
 import matplotlib.pyplot as plt
 
-dir_grl = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/data/processed/'
-dir_fig = '/home/edgar/Source/Repos/Observatorio-Ciudades/calidad-aire/output/figures/cdmx_yearly/'
-
 def pollutant(p):
     """Function that returns a str with a pollutant.
 
@@ -44,7 +41,6 @@ def compare_aq(p, city):
     plt.savefig(dir_fig_cmp+p+'_x1.png')
     
     #plt.show()
-
 
 def visualize_stations():
     
@@ -89,6 +85,10 @@ def graph_yearly(city):
     Args:
         city (str): code for the city to be analysed, for example: cdmx
     """
+    dir_pcs = '../data/processed/'
+    dir_fig = '../output/figures/'
+
+
     years = [2017, 2018, 2019, 2020] #Years to be referenced
 
     year_dict = {2017:'green', 2018:'blue',
@@ -97,7 +97,7 @@ def graph_yearly(city):
     
     for i in range(6):
         
-        data_mean = pd.read_csv(dir_grl+city+'/'+city+'_2017-2020_filtered_'+pollutant(i)+'.csv').set_index('FECHA')
+        data_mean = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant(i)+'.csv').set_index('FECHA')
         
         data_mean['mean'] = data_mean.mean(axis=1)
         
@@ -120,7 +120,7 @@ def graph_yearly(city):
             
         plt.ylabel('Concentration: '+pollutant(i))
         
-        plt.savefig(dir_fig+'Year_Compare_'+pollutant(i)+'.png')
+        plt.savefig(dir_fig+city+'_yearly/Year_Compare_'+pollutant(i)+'.png')
         
         ax.clear()
 
@@ -156,6 +156,8 @@ def visualize_aqdata_date(city, pollutant, date):
     Returns:
         folium map
     """
+    dir_pcs = '../data/processed/'
+
     city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
 
     city_dict = {'cdmx':'Valle de México'}
@@ -163,7 +165,7 @@ def visualize_aqdata_date(city, pollutant, date):
     p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
                'PM25':97.4, 'SO2':195,'NO2':315}
     
-    data_bydateParam = pd.read_csv(dir_grl+'processed/'+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
     
     centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
 
@@ -219,11 +221,13 @@ def compare_year_prior(city, pollutant, date):
     """
     city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
 
+    dir_pcs = '../data/processed/'
+
     city_dict = {'cdmx':'Valle de México'}
     
     prev_year = str(int(date[:4])-1)+date[4:]
     
-    data_bydateParam = pd.read_csv(dir_grl+'processed/'+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
     
     centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
 
