@@ -259,7 +259,7 @@ def interpolate_aqdata_date(city, pollutant, date):
     """Function that creates a folium map with user specified city, pollutant and date and interpolates valid values.
 
 
-    Args:
+        Args:
         city (str): city code to be analyzed (i.e. cdmx).
         pollutant (str): pollutant to be analyzed (i.e. PM10).
         date (str): date to be analyzed with format yyyy-mm-dd.
@@ -269,10 +269,10 @@ def interpolate_aqdata_date(city, pollutant, date):
     city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
 
     city_dict = {'cdmx':'Valle de México'}
-    
+
     p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
                'PM25':97.4, 'SO2':195,'NO2':315}
-    
+
     data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
     
     #lists to append valid values of lat and long for interpolation
@@ -294,38 +294,14 @@ def interpolate_aqdata_date(city, pollutant, date):
     max_x = max(x)
     min_y = min(y)
     max_y = max(y)
-    
-    cnt_x = (min_x+max_x)/2
-    cnt_y = (min_y+max_y)/2
-    
-    
-    centro_lat, centro_lon = cnt_y, cnt_x #Centro del mapa
 
-    #Creacion del mapa
-    folium_map = folium.Map(location=[centro_lat,centro_lon], zoom_start=10,
-                            tiles = 'cartodb positron')
+    folium_map = visualize_aqdata_date(city, pollutant, date)
 
-    for i, est in city_stations[city_stations['city']==city_dict[city]].iterrows():
-
-        est_code = city_stations.loc[(i),'codigo']
-
-        #Coloca los marcadores en el mapa
-        c_value = data_bydateParam.loc[(date),est_code]
-        c_graph = (data_bydateParam.loc[(date),est_code])/p_limits[pollutant]
-
-        #Puntos con nombre, latitud y longitud
-        popup_text = f"<b> Nombre: </b> {est.nombre} <br> <b> Latitud: </b> {est.lat:.5f} <br> <b> Longitud: </b> {est.long:.5f} <br> <b> Contaminante: </b> {pollutant} <br> <b> Conc: </b> {c_value} <br>"
-
-        #Coloca los marcadores en el mapa
-        folium.CircleMarker(location=[est.lat, est.long], radius=c_graph*50,
-                            tooltip = popup_text, fill=True, color=colors(c_graph),
-                            fill_opacity=0.65).add_to(folium_map)
-        
     #Valor de celda
     cellsize = 0.01
     #Valor de potencia
     p = 2
-    
+
     #x and y values for the start of the interpolation
     xidw=min_x
     yidw=min_y
@@ -341,16 +317,16 @@ def interpolate_aqdata_date(city, pollutant, date):
 
                 est_code = city_stations.loc[(i),'codigo']
                 c_value = data_bydateParam.loc[(date),est_code]
-                
+
                 if pd.notna(c_value):
                     dividendo = (c_value/(sqrt((est.long-xidw)**2+(est.lat-yidw)**2)**(p)))+ dividendo
                     divisor = (1/(sqrt((est.long-xidw)**2+(est.lat-yidw)**2)**(p))) + divisor
-                    
+
             concentracion = dividendo/divisor
             #Aqui se guardan los valores de las concentraciones para usarlos despues
-            
+
             c_graph = concentracion/p_limits[pollutant]
-            
+
             #Puntos con nombre, latitud y longitud
             popup_text = f"<b> Nombre: </b> {'NA'} <br> <b> Latitud: </b> {yidw:.5f} <br> <b> Longitud: </b> {xidw:.5f} <br> <b> Contaminante: </b> {pollutant} <br> <b> Conc: </b> {concentracion} <br>"
 
@@ -358,7 +334,7 @@ def interpolate_aqdata_date(city, pollutant, date):
             folium.CircleMarker(location=[yidw, xidw], radius=1,
                                 tooltip = popup_text, fill=True, color=colors(c_graph),
                                 opacity=0.45).add_to(folium_map)
-            
+
             idw.append([yidw,xidw,concentracion])
             yidw = yidw + cellsize
             dividendo = 0
@@ -367,6 +343,6 @@ def interpolate_aqdata_date(city, pollutant, date):
         yidw = min_y
 
     inter = pd.DataFrame(idw, columns=['lat','long','conc'])
-    
+
 
     return(folium_map)
