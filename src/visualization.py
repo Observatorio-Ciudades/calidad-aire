@@ -21,7 +21,7 @@ def pollutant(p):
         str: pollutant.
     """
     #Parametros de contaminantes
-    param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+    param = ['CO','NO2', 'O3','PM10','SO2']
     return (param[p])
 
 def compare_aq(p, city):
@@ -90,15 +90,20 @@ def graph_yearly(city):
     dir_fig = '../output/figures/'
 
 
-    years = [2017, 2018, 2019, 2020] #Years to be referenced
+    years = [2017, 2018, 2019] #Years to be referenced
 
     year_dict = {2017:'green', 2018:'blue',
                 2019:'orange', 2020:'red'}
     
+    data_csv = dir_pcs+city+'/'+city+'_2017-2019_'
     
-    for i in range(6):
+    if city == 'cdmx':
+        data_csv = dir_pcs+city+'/'+city+'_2017-2020_filtered_'
+    
+    
+    for i in range(5):
         
-        data_mean = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant(i)+'.csv').set_index('FECHA')
+        data_mean = pd.read_csv(data_csv+pollutant(i)+'.csv').set_index('FECHA')
         
         data_mean['mean'] = data_mean.mean(axis=1)
         
@@ -161,14 +166,44 @@ def visualize_aqdata_date(city, pollutant, date):
 
     city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
 
-    city_dict = {'cdmx':'Valle de México'}
+    city_dict = {'cdmx':'Valle de México',
+                'gdl':'Guadalajara'}
     
     p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
                'PM25':97.4, 'SO2':195,'NO2':315}
     
-    data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    data_csv = dir_pcs+city+'/'+city+'_2017-2019_'+pollutant+'.csv'
     
-    centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
+    if city == 'cdmx':
+        data_csv = dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv'
+    
+    data_bydateParam = pd.read_csv(data_csv).set_index('FECHA')
+    
+    #lists to append valid values of lat and long for interpolation
+    
+    x = []
+    y = []
+    
+    for i, est in city_stations[city_stations['city']==city_dict[city]].iterrows():
+
+                est_code = city_stations.loc[(i),'codigo']
+                c_value = data_bydateParam.loc[(date),est_code]
+                
+                if pd.notna(c_value):
+                    x.append(est.long)
+                    y.append(est.lat)
+
+    #Registers the boundries coordinates for the interpolation
+    min_x = min(x)
+    max_x = max(x)
+    min_y = min(y)
+    max_y = max(y)
+    
+    cnt_x = (min_x+max_x)/2
+    cnt_y = (min_y+max_y)/2
+    
+    
+    centro_lat, centro_lon = cnt_y, cnt_x #Centro del mapa
 
     #Creacion del mapa
     folium_map = folium.Map(location=[centro_lat,centro_lon], zoom_start=10,
@@ -224,13 +259,43 @@ def compare_year_prior(city, pollutant, date):
 
     dir_pcs = '../data/processed/'
 
-    city_dict = {'cdmx':'Valle de México'}
+    city_dict = {'cdmx':'Valle de México',
+                'gdl':'Guadalajara'}
     
     prev_year = str(int(date[:4])-1)+date[4:]
     
-    data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    data_csv = dir_pcs+city+'/'+city+'_2017-2019_'+pollutant+'.csv'
     
-    centro_lat, centro_lon = 19.442810, -99.131233 #Centro del mapa
+    if city == 'cdmx':
+        data_csv = dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv'
+    
+    data_bydateParam = pd.read_csv(data_csv).set_index('FECHA')
+    
+    #lists to append valid values of lat and long for interpolation
+    
+    x = []
+    y = []
+    
+    for i, est in city_stations[city_stations['city']==city_dict[city]].iterrows():
+
+                est_code = city_stations.loc[(i),'codigo']
+                c_value = data_bydateParam.loc[(date),est_code]
+                
+                if pd.notna(c_value):
+                    x.append(est.long)
+                    y.append(est.lat)
+
+    #Registers the boundries coordinates for the interpolation
+    min_x = min(x)
+    max_x = max(x)
+    min_y = min(y)
+    max_y = max(y)
+    
+    cnt_x = (min_x+max_x)/2
+    cnt_y = (min_y+max_y)/2
+    
+    
+    centro_lat, centro_lon = cnt_y, cnt_x #Centro del mapa
 
     #Creacion del mapa
     folium_map = folium.Map(location=[centro_lat,centro_lon], zoom_start=10,
@@ -268,12 +333,18 @@ def interpolate_aqdata_date(city, pollutant, date):
 
     city_stations = pd.read_csv('../data/raw/Grl/stations/city_stations.csv')
 
-    city_dict = {'cdmx':'Valle de México'}
+    city_dict = {'cdmx':'Valle de México',
+                'gdl':'Guadalajara'}
 
     p_limits = {'PM10':214, 'O3':154, 'CO':16.5,
                'PM25':97.4, 'SO2':195,'NO2':315}
 
-    data_bydateParam = pd.read_csv(dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv').set_index('FECHA')
+    data_csv = dir_pcs+city+'/'+city+'_2017-2019_'+pollutant+'.csv'
+    
+    if city == 'cdmx':
+        data_csv = dir_pcs+city+'/'+city+'_2017-2020_filtered_'+pollutant+'.csv'
+    
+    data_bydateParam = pd.read_csv(data_csv).set_index('FECHA')
     
     #lists to append valid values of lat and long for interpolation
     
