@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
-
+import xlrd
 
 def pollutant(p):
     """Function that returns a str with a pollutant.
@@ -113,20 +113,20 @@ def merge_aq(city):
         csv -- csv with all the data from air quality stations
     """
     dir_raw = '../data/raw/'
-    dir_pcs = '../data/proccessed/'
+    dir_pcs = '../data/processed/'
 
-    years = [2017, 2018, 2019, 2020] #Years to be merged
+    years = [2017, 2018, 2019] #Years to be merged
     
     all_data = pd.DataFrame()
     for year in years:
-        for i in range(6):
-            
-            data = pd.read_excel(dir_raw+city+str(year)[-2:]+'RAMA\\'+str(year)+pollutant(i)+'.xls').replace(-99,np.NaN)
-            data['PARAM']=pollutant(i)
-            data = data.set_index(['PARAM','FECHA','HORA'])
-            all_data = all_data.append(data)
+        
+        #for i in range(5):    
+            #data = pd.read_excel(dir_raw+city+str(year)[-2:]+'RAMA\\'+str(year)+pollutant(i)+'.xls').replace(-99,np.NaN)
+        data = pd.read_csv(dir_raw+city+'/stack/'+str(year)+'.csv').replace(r'^\s*$',np.nan,regex=True)
+        data = data.set_index(['PARAM','FECHA'])
+        all_data = all_data.append(data)
     
-    filename = dir_pcs + str(years[0])+'-'+str(years[len(years)-1])
+    filename = dir_pcs + city + '/' + city + '_' + str(years[0])+'-'+str(years[len(years)-1])
     all_data.to_csv (r''+filename+'.csv', index = True, header=True)
 
 def res_aqdata(city):
@@ -136,7 +136,7 @@ def res_aqdata(city):
         city (str): city code to by analyzed.
     """
 
-    dir_pcs = '../data/proccessed/'
+    dir_pcs = '../data/processed/'
 
     years = [2017, 2018, 2019, 2020] #Years to be summarized
 
@@ -374,3 +374,72 @@ def aqip_data():
     all_data = all_data.reset_index().set_index(['City','Specie','Date'])
 
     all_data.to_csv(dir_pcs_aqip +'MX_2015_2020.csv')
+    
+    
+def gdl_data ():
+    dir_gdl = '../data/raw/gdl/'
+    
+    est_dict = {'ÁGUILAS':'AGU', 'ATEMAJAC':'ATM', 'CENTRO':'CEN', 
+                'LAS PINTAS':'PIN', 'LOMA DORADA':'LDO', 'MIRAVALLE':'MIR', 'OBLATOS':'OBL', 
+                'SANTA FE':'SFE', 'TLAQUEPAQUE':'TLA', 'VALLARTA':'VAL'}
+    
+    for file in os.listdir(dir_gdl):
+
+        f_check = os.path.join(dir_gdl,file)
+
+        if os.path.isfile(f_check):
+
+            xls = xlrd.open_workbook(r''+dir_gdl+file, on_demand=True)
+            sheets = xls.sheet_names()
+
+        else:
+            continue
+        
+        year = file[6:10]
+        
+        print (year)
+        
+        df = pd.DataFrame(columns=['O3','CO','PM10','SO2','NO2'])
+
+        df['FECHA'] = pd.date_range(start = pd.Timestamp(year), 
+                                   end = pd.Timestamp(year) + pd.tseries.offsets.YearEnd(0),
+                                   freq = 'D')
+
+        df = df.set_index('FECHA')
+        df = df.stack(dropna=False)
+        all_data = pd.DataFrame(df)
+        all_data = all_data.rename_axis(index=['FECHA','PARAM'])
+        all_data = all_data.drop(columns=[0])
+        
+        #print(all_data)
+
+        for s in sheets:
+
+            gdl_data = pd.read_excel(dir_gdl+file, sheet_name = s).rename(columns={'Fecha':'FECHA',
+                                                                                   'Hora':'HORA'}).replace(r'^\s*$', 
+                                                                                                           np.nan, 
+                                                                                                           regex=True)
+            gdl_data.columns = [col.strip() for col in gdl_data.columns]
+            
+            gdl_data = gdl_data[['FECHA','O3','NO2','SO2','PM10','CO']]
+
+            gdl_data['FECHA'] = gdl_data['FECHA'].dt.date
+
+            gdl_stack = pd.DataFrame(gdl_data.set_index(['FECHA']).stack([0]))
+
+            gdl_stack = gdl_stack.reset_index().rename(columns={'level_1':'PARAM',
+                                                                0:est_dict[s.strip(' ').upper()]})
+            
+            gdl_stack['FECHA'] = pd.to_datetime(gdl_stack['FECHA'])
+            
+            gdl_stack = gdl_stack[gdl_stack['FECHA'].dt.year==int(file[6:10])]
+
+            gdl_stack[est_dict[s.strip(' ').upper()]] = pd.to_numeric(gdl_stack[est_dict[s.strip(' ').upper()]], errors='coerce')
+
+            gdl_stack = gdl_stack.groupby(['FECHA','PARAM']).mean()
+
+            all_data = pd.merge(all_data, gdl_stack, how='outer',left_index=True, right_index=True)
+            
+        
+        #print (all_data)
+        all_data.to_csv(dir_gdl+'stack/'+file[6:10]+'.csv')

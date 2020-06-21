@@ -41,7 +41,7 @@ def pollutant(p):
         str: pollutant.
     """
     #Parametros de contaminantes
-    param = ['CO','NO2', 'O3','PM10','PM25','SO2']
+    param = ['CO','NO2', 'O3','PM10','SO2']
     return (param[p])
 
 def aqip_mx(city):
@@ -111,14 +111,16 @@ def airquality_average(city):
         csv: individual csv for each pollutant with the average data by week of the first four months of the yearly data available.
     """
     dir_pcs_mx = '../data/processed/'+city+'/'
-    data_csv = dir_pcs_mx+city+'_2017-2020.csv'
-
+    #data_csv = pd.read_csv(dir_pcs_mx+city+'_2017-2019.csv').set_index(['FECHA','PARAM'])
+    data_csv = dir_pcs_mx+city+'_2017-2019.csv'
+    
     if city == 'cdmx':
         data_csv = '../data/processed/'+city+'/'+city+'_2017-2020_filtered.csv'
     
     month = [1,2,3,4]
     
-    data_bydate = data_csv.groupby(level=('FECHA','PARAM')).mean().reset_index()
+    data_bydate = pd.read_csv(data_csv).set_index(['FECHA','PARAM']).groupby(level=('FECHA','PARAM')).mean().reset_index()
+    
     data_bydate['FECHA'] = pd.to_datetime(data_bydate['FECHA'])
     
     for m in month:
@@ -132,11 +134,14 @@ def airquality_average(city):
 
             filter_month = filter_month.append(month_tmp)
     
-    for i in range(6):
+    for i in range(5):
         
         data_bydateParam = filter_month[filter_month['PARAM']==pollutant(i)].set_index('FECHA')
         
         data_bydateParam = data_bydateParam.rolling(7, min_periods=1).mean()
+        
+        if pollutant(i)!= 'PM10':
+            data_bydateParam = data_bydateParam*1000
         
         data_bydateParam.to_csv(data_csv[:-4]+'_'+pollutant(i)+'.csv')
         
