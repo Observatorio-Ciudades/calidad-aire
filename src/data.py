@@ -377,6 +377,10 @@ def aqip_data():
     
     
 def gdl_data ():
+    """Merges and adjusts format for SIMAJ database for Guadalajara's stations.
+    
+    """
+
     dir_gdl = '../data/raw/gdl/'
     
     est_dict = {'ÁGUILAS':'AGU', 'ATEMAJAC':'ATM', 'CENTRO':'CEN', 
@@ -443,3 +447,110 @@ def gdl_data ():
         
         #print (all_data)
         all_data.to_csv(dir_gdl+'stack/'+file[6:10]+'.csv')
+
+
+
+def aqip_mx():
+
+    """Creates two csv files with data from the Air Quality Index Project for mexican cities. 
+        The first contains data from the criterion pollutants for the mexican cities in the AQIP database, 
+        from January to May from 2017 to 2020.
+        The second contains the ammount of dates with data for every city and pollutant and a percentage of
+        the total options available.
+    """
+    
+    dir_pcs_aqip = '../data/processed/aqip/'
+    
+    aqip_mx = pd.read_csv(dir_pcs_aqip+'MX_2015_2020.csv') #Data from AQIP filtered for mexican cities
+    
+    years = [2017, 2018, 2019, 2020] #Years to be analyzed
+    
+    aqip_mx['Date'] = pd.to_datetime(aqip_mx['Date'])
+
+    aqip_mx2 = pd.DataFrame()
+    
+    stat_city = pd.DataFrame(columns=['City','Specie','Count','Pctg','Count_avg','Pctg_avg'])
+
+    for year in years:
+
+        aqip_mx2 = aqip_mx2.append(aqip_mx[aqip_mx['Date'].dt.year==year]) #Dissmisses years not in list
+
+    
+    cities = aqip_mx.groupby(['City']).count()
+    
+    city = cities.index.tolist() #List of cities in the database
+
+
+    for i in range (5):
+
+        df = pd.DataFrame()
+
+        for year in years:
+
+            df2 = pd.DataFrame()
+
+            y=str(year)
+            
+            df2['Date'] = pd.date_range(start = pd.Timestamp(y), 
+                                           end = pd.Timestamp(y+'-05-31')  ,
+                                           freq = 'D')
+            df = df.append(df2) #Creates database with months from January to May for the years listed
+            
+
+        c_data = aqip_mx2[aqip_mx2['Specie']==pollutant(i)] #Creates a column with the pollutant analyzed
+
+        c_data = c_data.set_index('Date')
+
+        for c in city:
+
+            #Adds the data for every city for the specified pollutant to the DataFrame with all dates
+            df=df.merge(c_data[c_data['City']==c]['c_median'], how='left', on='Date').rename(columns={'c_median':c})
+            
+        
+        df = df.set_index('Date')
+
+        #Creates DataFrame to count presence of data by city and pollutant
+        res_data = pd.DataFrame(df.stack())
+        
+        res_data = res_data.reset_index().drop(columns=['Date']).rename(columns={'level_1':'City',
+                                                                     0:'Count'}).groupby('City').count()
+
+        res_data['Pctg'] = res_data['Count']/len(df)
+            
+        df = df.rolling(7, min_periods=1).mean()
+        
+        #Creates DataFrame to count presence of data by city and pollutant after weekly average
+        res_data2 = pd.DataFrame(df.stack())
+        res_data2 = res_data2.reset_index().drop(columns=['Date']).rename(columns={'level_1':'City',
+                                                             0:'Count_avg'}).groupby('City').count()
+        
+        res_data2['Pctg_avg'] = res_data2['Count_avg']/len(df)
+        res_data = res_data.merge(res_data2, how='outer', on='City')
+        
+        res_data['Specie'] = pollutant(i)
+        
+        stat_city = stat_city.append(res_data.reset_index())
+
+        #Saves csv with city data by pollutant    
+        df.to_csv(dir_pcs_aqip+'MX_'+pollutant(i)+'_'+str(years[0])+'-'+str(years[len(years)-1])+'.csv')
+           
+    #Sets multiindex for stat_city
+    stat_city = stat_city.set_index(['City','Specie'])
+    
+    specie = [pollutant(i) for i in range(5)]*15
+    
+    city2 = city*5
+    
+    city2.sort()
+
+    index =[city2,specie]
+
+    tuples = list(zip(*index))
+
+    index = pd.MultiIndex.from_tuples(tuples, names=['City','Specie'])
+    
+    stat_city = stat_city.reindex(index)
+    
+    #Saves csv with data ammount of dates with data for every city 
+    # and pollutant and a percentage of the total options available
+    stat_city.to_csv(dir_pcs_aqip+'MX_StatRes_'+str(years[0])+'-'+str(years[len(years)-1])+'.csv')
