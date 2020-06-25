@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_445ac288d72a4b7a90ea2a35ead0a93c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_445ac288d72a4b7a90ea2a35ead0a93c" ></div>
+        
+</body>
+<script>    
+    
+            var map_445ac288d72a4b7a90ea2a35ead0a93c = L.map(
+                "map_445ac288d72a4b7a90ea2a35ead0a93c",
+                {
+                    center: [19.438254166666496, -99.19569444444448],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_9e1725fd35924863bcf24c0c3ed0ab34 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            var circle_marker_6339c03c48a14bc1b63366e070c6941d = L.circleMarker(
+                [19.635555555556, -98.912222222222],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_6339c03c48a14bc1b63366e070c6941d.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Acolman <br> <b> Latitud: </b> 19.63556 <br> <b> Longitud: </b> -98.91222 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_9dc964705e5247a585100e930af12447 = L.circleMarker(
+                [19.154286111111, -99.16277777777799],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.872822053722677, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_9dc964705e5247a585100e930af12447.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Ajusco <br> <b> Latitud: </b> 19.15429 <br> <b> Longitud: </b> -99.16278 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 39.64829192546585 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_81c1b9ab8e234d6ea2b02ca77f568377 = L.circleMarker(
+                [19.272222222222, -99.20777777777799],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.26001010229049, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_81c1b9ab8e234d6ea2b02ca77f568377.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Ajusco Medio <br> <b> Latitud: </b> 19.27222 <br> <b> Longitud: </b> -99.20778 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 56.24083111505471 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_2d609a6f3daa47c79f123b11ec1d4504 = L.circleMarker(
+                [19.577222222221998, -99.254166666667],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.60320181149818, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_2d609a6f3daa47c79f123b11ec1d4504.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Atizapán <br> <b> Latitud: </b> 19.57722 <br> <b> Longitud: </b> -99.25417 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 29.577861579414396 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_cc6ca2d45ef44320ab35d1d657dc8f5f = L.circleMarker(
+                [19.468611111111, -99.17],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.658184391769126, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_cc6ca2d45ef44320ab35d1d657dc8f5f.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Camarones <br> <b> Latitud: </b> 19.46861 <br> <b> Longitud: </b> -99.17000 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 38.98720792664891 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1d9d285210e04de6a79aa68118c29b61 = L.circleMarker(
+                [19.326388888889, -99.176111111111],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.61525301820333, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_1d9d285210e04de6a79aa68118c29b61.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Centro de Ciencias de la Atmósfera <br> <b> Latitud: </b> 19.32639 <br> <b> Longitud: </b> -99.17611 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 48.094979296066256 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_40eadc9e5f2b4361ba0ed6f9d6ad4926 = L.circleMarker(
+                [19.267222222222, -98.88611111111099],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_40eadc9e5f2b4361ba0ed6f9d6ad4926.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Chalco <br> <b> Latitud: </b> 19.26722 <br> <b> Longitud: </b> -98.88611 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_0dc664186fe24f79b70e80b78b76b11b = L.circleMarker(
+                [19.365555555556, -99.29194444444401],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 16.905116340463607, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_0dc664186fe24f79b70e80b78b76b11b.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Cuajimalpa <br> <b> Latitud: </b> 19.36556 <br> <b> Longitud: </b> -99.29194 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 52.06775832862791 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_0f04a602c0cf4f1e86792ac733954a25 = L.circleMarker(
+                [19.722222222221998, -99.19861111111099],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.2792126167237, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_0f04a602c0cf4f1e86792ac733954a25.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Cuautitlán <br> <b> Latitud: </b> 19.72222 <br> <b> Longitud: </b> -99.19861 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 31.659974859509 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_8bc96501ac504a8cae215bec006f40a8 = L.circleMarker(
+                [19.4825, -99.243611111111],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.801434294779472, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_8bc96501ac504a8cae215bec006f40a8.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> FES Acatlán <br> <b> Latitud: </b> 19.48250 <br> <b> Longitud: </b> -99.24361 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 36.348417627920774 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_e5121261405545a0b49e2156890f88db = L.circleMarker(
+                [19.411666666667, -99.15222222222201],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.15503030687146, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_e5121261405545a0b49e2156890f88db.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Hospital General de México <br> <b> Latitud: </b> 19.41167 <br> <b> Longitud: </b> -99.15222 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 43.5974933451641 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_7dc10ba6da2f4cd883fabb2764585904 = L.circleMarker(
+                [19.384444444444, -99.117777777778],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.947364857857306, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_7dc10ba6da2f4cd883fabb2764585904.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Iztacalco <br> <b> Latitud: </b> 19.38444 <br> <b> Longitud: </b> -99.11778 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 39.8778837622005 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_689439103ab2408a98fb8936a04b0c41 = L.circleMarker(
+                [19.535, -99.117777777778],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.794096209912551, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_689439103ab2408a98fb8936a04b0c41.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> La Presa <br> <b> Latitud: </b> 19.53500 <br> <b> Longitud: </b> -99.11778 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 30.165816326530656 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_75881902ea634464bc864a4172c4c716 = L.circleMarker(
+                [19.578888888889, -99.03972222222201],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.236779635626132, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_75881902ea634464bc864a4172c4c716.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Los Laureles <br> <b> Latitud: </b> 19.57889 <br> <b> Longitud: </b> -99.03972 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 31.529281277728487 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1b88bc26ffd44f4a8fae8d40a942bce2 = L.circleMarker(
+                [19.424722222221998, -99.11972222222201],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.34570479801182, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_1b88bc26ffd44f4a8fae8d40a942bce2.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Merced <br> <b> Latitud: </b> 19.42472 <br> <b> Longitud: </b> -99.11972 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 38.024770777876405 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f7e837bb8936478eaf8877565ff02413 = L.circleMarker(
+                [19.460416666666998, -98.902861111111],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_f7e837bb8936478eaf8877565ff02413.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Montecillo <br> <b> Latitud: </b> 19.46042 <br> <b> Longitud: </b> -98.90286 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_eaf22510ea9a4368be9718c092aedf3c = L.circleMarker(
+                [19.393888888889002, -99.028333333333],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.841780557508129, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_eaf22510ea9a4368be9718c092aedf3c.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Nezahualcóyotl <br> <b> Latitud: </b> 19.39389 <br> <b> Longitud: </b> -99.02833 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 39.55268411712503 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f97f06aa958b4460a3464e29ea6d37f2 = L.circleMarker(
+                [19.325277777778002, -99.204166666667],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.475122149367937, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_f97f06aa958b4460a3464e29ea6d37f2.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Pedregal <br> <b> Latitud: </b> 19.32528 <br> <b> Longitud: </b> -99.20417 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 47.663376220053244 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f1f8366e4ae34ccfbdaf223165f563ac = L.circleMarker(
+                [19.533055555556, -99.03055555555599],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.490705316570438, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_f1f8366e4ae34ccfbdaf223165f563ac.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> San Agustín <br> <b> Latitud: </b> 19.53306 <br> <b> Longitud: </b> -99.03056 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 32.311372375036946 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_8061b2c02770413d9021898bec058c9c = L.circleMarker(
+                [19.3575, -99.263055555556],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_8061b2c02770413d9021898bec058c9c.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Santa Fe <br> <b> Latitud: </b> 19.35750 <br> <b> Longitud: </b> -99.26306 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_27aff87533374de3900fd337f9b754d7 = L.circleMarker(
+                [19.404, -99.20272222222201],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.296217498857247, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_27aff87533374de3900fd337f9b754d7.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Miguel Hidalgo <br> <b> Latitud: </b> 19.40400 <br> <b> Longitud: </b> -99.20272 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 44.03234989648032 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_7968c0ea5f084e2b94166de80db403a6 = L.circleMarker(
+                [19.246666666667, -99.010833333333],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.143441961764925, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_7968c0ea5f084e2b94166de80db403a6.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Tlahuac <br> <b> Latitud: </b> 19.24667 <br> <b> Longitud: </b> -99.01083 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 43.561801242235966 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6481eaea266545a4a869855971e38cf6 = L.circleMarker(
+                [19.529166666667, -99.204722222222],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.92167315825258, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_6481eaea266545a4a869855971e38cf6.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Tlalnepantla <br> <b> Latitud: </b> 19.52917 <br> <b> Longitud: </b> -99.20472 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 33.638753327417945 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_9f73d70e757c4c78850f9c6e75c3bce6 = L.circleMarker(
+                [19.602777777778, -99.177222222222],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_9f73d70e757c4c78850f9c6e75c3bce6.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Tultitlán <br> <b> Latitud: </b> 19.60278 <br> <b> Longitud: </b> -99.17722 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d6523d7394d14bc2a9a4f92e298341ca = L.circleMarker(
+                [19.360833333333, -99.073888888889],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.47049907689578, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_d6523d7394d14bc2a9a4f92e298341ca.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> UAM Iztapalapa <br> <b> Latitud: </b> 19.36083 <br> <b> Longitud: </b> -99.07389 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 41.48913715683901 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_562070cceae540b49c81c5a6831d7191 = L.circleMarker(
+                [19.304444444444, -99.103888888889],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.684404252949058, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_562070cceae540b49c81c5a6831d7191.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> UAM Xochimilco <br> <b> Latitud: </b> 19.30444 <br> <b> Longitud: </b> -99.10389 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 45.22796509908309 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_57000fc11b4446439ca0ff18b000b82a = L.circleMarker(
+                [19.6575, -99.096666666667],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.08033961749578, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_57000fc11b4446439ca0ff18b000b82a.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Villa de las Flores <br> <b> Latitud: </b> 19.65750 <br> <b> Longitud: </b> -99.09667 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 37.207446021887 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_9c95160207d040229d6659d86d7b6937 = L.circleMarker(
+                [19.526111111111, -99.0825],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": NaN, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_9c95160207d040229d6659d86d7b6937.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Xalostoc <br> <b> Latitud: </b> 19.52611 <br> <b> Longitud: </b> -99.08250 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> nan <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a3c13444b12042a0b68df1f48300a232 = L.circleMarker(
+                [19.199166666666997, -99.010833333333],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.12868032588532, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_a3c13444b12042a0b68df1f48300a232.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Milpa Alta <br> <b> Latitud: </b> 19.19917 <br> <b> Longitud: </b> -99.01083 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 55.83633540372678 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_fda9742a123b46868882a9aed906905e = L.circleMarker(
+                [19.371666666667, -99.159166666667],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.516206878008132, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_fda9742a123b46868882a9aed906905e.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Benito Juárez <br> <b> Latitud: </b> 19.37167 <br> <b> Longitud: </b> -99.15917 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 41.62991718426505 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a405776262cc41fdaba436b4c4fa99c0 = L.circleMarker(
+                [19.292222222221998, -99.38055555555599],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.926590342517573, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_a405776262cc41fdaba436b4c4fa99c0.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Instituto Nacional de Investigaciones Nucleares <br> <b> Latitud: </b> 19.29222 <br> <b> Longitud: </b> -99.38056 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 45.97389825495413 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_ca4c7292e5a8480f8662451b7bdaeaf2 = L.circleMarker(
+                [19.482777777778, -99.094722222222],
+                {"bubblingMouseEvents": true, "color": "#75b46f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b46f", "fillOpacity": 0.65, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.04763153143808, "stroke": true, "weight": 3}
+            ).addTo(map_445ac288d72a4b7a90ea2a35ead0a93c);
+        
+    
+            circle_marker_ca4c7292e5a8480f8662451b7bdaeaf2.bindTooltip(
+                `<div>
+                     <b> Nombre: </b> Gustavo A. Madero <br> <b> Latitud: </b> 19.48278 <br> <b> Longitud: </b> -99.09472 <br> <b> Contaminante: </b> O3 <br> <b> Conc: </b> 40.18670511682929 <br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
